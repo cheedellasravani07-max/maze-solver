@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from bfs import bfs
 from dfs import dfs
 from astar import astar
+from maze import is_valid_maze
 
 app = Flask(__name__)
 
@@ -9,7 +10,6 @@ app = Flask(__name__)
 @app.route("/")
 def home():
     return "Maze Solver Backend is Running!"
-
 
 @app.route("/solve", methods=["POST"])
 def solve_maze():
@@ -28,6 +28,9 @@ def solve_maze():
     start = tuple(data["start"])
     end = tuple(data["end"])
     algorithm = data["algorithm"].lower()
+
+    if not is_valid_maze(maze, start, end):
+        return jsonify({"error": "Invalid maze"}), 400
 
     if algorithm == "bfs":
         path = bfs(maze, start, end)
@@ -53,6 +56,8 @@ def solve_maze():
         "path": path,
         "message": "Path found"
     })
+
+        
 
 if __name__ == "__main__":
     app.run(debug=True)
