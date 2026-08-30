@@ -15,10 +15,19 @@ def home():
 def solve_maze():
     data = request.get_json()
 
+    if not data:
+        return jsonify({"error": "No data provided"}), 400
+
+    required_fields = ["maze", "start", "end", "algorithm"]
+
+    for field in required_fields:
+        if field not in data:
+            return jsonify({"error": f"Missing field: {field}"}), 400
+
     maze = data["maze"]
     start = tuple(data["start"])
     end = tuple(data["end"])
-    algorithm = data["algorithm"]
+    algorithm = data["algorithm"].lower()
 
     if algorithm == "bfs":
         path = bfs(maze, start, end)
@@ -32,11 +41,18 @@ def solve_maze():
     else:
         return jsonify({"error": "Unknown algorithm"}), 400
 
+    if path is None:
+        return jsonify({
+            "algorithm": algorithm,
+            "path": None,
+            "message": "No path found"
+        })
+
     return jsonify({
         "algorithm": algorithm,
-        "path": path
+        "path": path,
+        "message": "Path found"
     })
-
 
 if __name__ == "__main__":
     app.run(debug=True)
