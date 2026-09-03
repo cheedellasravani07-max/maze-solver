@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maze Solver</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <h1>Maze Solver</h1>
+
+    <button id="startBtn">Set Start</button>
+    <button id="endBtn">Set End</button>
+    <button id="solveBtn">Solve Maze</button>
+    <button id="resetBtn">Reset</button>
+
+    <div id="maze"></div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+</html>
