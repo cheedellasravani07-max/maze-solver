@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Maze Solver Visualizer</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Maze Solver Visualizer</h1>
+
+        <p class="description">
+            Visualize different algorithms and find the shortest path through a maze.
+        </p>
+
+        <div class="controls">
+
+            <label for="algorithm">Select Algorithm:</label>
+
+            <select id="algorithm">
+                <option value="bfs">Breadth First Search (BFS)</option>
+                <option value="dfs">Depth First Search (DFS)</option>
+                <option value="dijkstra">Dijkstra's Algorithm</option>
+                <option value="astar">A* Algorithm</option>
+            </select>
+
+            <button class="btn" id="generateBtn">Generate Maze</button>
+            <button class="btn" id="startBtn">Start</button>
+            <button class="btn" id="resetBtn">Reset</button>
+
+        </div>
+
+        <div class="maze-container" id="maze">
+            <!-- Maze cells will be created using JavaScript -->
+        </div>
+
+        <div class="statistics">
+
+            <h2>Statistics</h2>
+
+            <p>
+                Algorithm:
+                <span id="selectedAlgorithm">BFS</span>
+            </p>
+
+            <p>
+                Steps:
+                <span id="steps">0</span>
+            </p>
+
+            <p>
+                Path Length:
+                <span id="pathLength">0</span>
+            </p>
+
+        </div>
+
+        <div class="legend">
+
+            <h2>Legend</h2>
+
+            <div class="legend-items">
+                <span>🟩 Start</span>
+                <span>🟥 End</span>
+                <span>⬛ Wall</span>
+                <span>🟦 Visited</span>
+                <span>🟨 Shortest Path</span>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
