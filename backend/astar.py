@@ -12,6 +12,7 @@ def astar(maze, start, end):
 
     parent = {start: None}
     cost = {start: 0}
+    explored = [start]
 
     directions = [
         (-1, 0),  # Up
@@ -35,7 +36,7 @@ def astar(maze, start, end):
             if (
                 0 <= new_row < len(maze)
                 and 0 <= new_col < len(maze[0])
-                and maze[new_row][new_col] != "#"
+                and maze[new_row][new_col] != 1
             ):
                 new_cell = (new_row, new_col)
 
@@ -43,6 +44,7 @@ def astar(maze, start, end):
 
                 if new_cell not in cost or new_cost < cost[new_cell]:
                     cost[new_cell] = new_cost
+                    explored.append(new_cell)
 
                     priority = new_cost + heuristic(new_cell, end)
 
@@ -65,4 +67,7 @@ def astar(maze, start, end):
 
     path.reverse()
 
-    return path
+    return {
+    "path": path,
+    "explored": explored
+}

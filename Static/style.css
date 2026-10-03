@@ -1,6 +1,8 @@
 body {
     font-family: Arial, sans-serif;
     text-align: center;
+     margin: 0;
+    padding: 20px;
 }
 
 #maze {
@@ -18,14 +20,34 @@ body {
     border: 1px solid #ccc;
     background-color: white;
     box-sizing: border-box;
+    border-radius: 2px;
+
 }
 .wall {
     background-color: black;
 }
 .start {
-    background-color: green;
+    background-color: rgb(128, 0, 105);
 }
 
 .end {
-    background-color: red;
+    background-color: rgb(0, 255, 102);
+}
+.path {
+    background-color: rgb(0, 170, 255);
+}
+.visited {
+    background-color: orange;
+}
+#comparison {
+    margin-top: 15px;
+    font-weight: bold;
+}
+button {
+    padding: 8px 12px;
+    margin: 4px;
+    border-radius: 6px;
+    border: 1px solid #888;
+    cursor: pointer;
+    font-size: 14px;
 }

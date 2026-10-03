@@ -1,15 +1,15 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
+import time
 from bfs import bfs
 from dfs import dfs
 from astar import astar
 from maze import is_valid_maze
 
-app = Flask(__name__)
-
+app = Flask(__name__, template_folder="../templates", static_folder="../Static")
 
 @app.route("/")
 def home():
-    return "Maze Solver Backend is Running!"
+    return render_template("index.html")
 
 @app.route("/solve", methods=["POST"])
 def solve_maze():
@@ -31,15 +31,21 @@ def solve_maze():
 
     if not is_valid_maze(maze, start, end):
         return jsonify({"error": "Invalid maze"}), 400
-
+    start_time = time.perf_counter()
     if algorithm == "bfs":
-        path = bfs(maze, start, end)
+        result = bfs(maze, start, end)
+        path = result["path"] if result else None
+        explored = result["explored"] if result else []
 
     elif algorithm == "dfs":
-        path = dfs(maze, start, end)
+        result = dfs(maze, start, end)
+        path = result["path"] if result else None
+        explored = result["explored"] if result else []
 
     elif algorithm == "astar":
-        path = astar(maze, start, end)
+            result = astar(maze, start, end)
+            path = result["path"] if result else None
+            explored = result["explored"] if result else []
 
     else:
         return jsonify({"error": "Unknown algorithm"}), 400
@@ -50,10 +56,14 @@ def solve_maze():
             "path": None,
             "message": "No path found"
         })
-
+    execution_time = time.perf_counter() - start_time
+    path_length = len(path)
     return jsonify({
         "algorithm": algorithm,
         "path": path,
+        "explored": explored,
+        "path_length": path_length,
+        "execution_time": execution_time,
         "message": "Path found"
     })
 

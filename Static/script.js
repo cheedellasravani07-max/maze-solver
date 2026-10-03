@@ -54,6 +54,7 @@ for (let row = 0; row < rows; row++) {
                     Number(cell.dataset.row),
                     Number(cell.dataset.col)
                 ];
+                selectedMode = "wall";
 
             } else if (selectedMode === "end") {
 
@@ -71,7 +72,7 @@ for (let row = 0; row < rows; row++) {
                     Number(cell.dataset.row),
                     Number(cell.dataset.col)
                 ];
-
+                selectedMode = "wall";
             } else {
 
                 cell.classList.toggle("wall");
@@ -103,12 +104,11 @@ endBtn.addEventListener("click", function() {
     selectedMode = "end";
 });
 
-
 // Solve button
 
 const solveBtn = document.getElementById("solveBtn");
-
-solveBtn.addEventListener("click", function() {
+const compareBtn = document.getElementById("compareBtn");
+solveBtn.addEventListener("click", async function() {
 
     if (startPosition === null) {
         alert("Please select a Start point.");
@@ -120,8 +120,8 @@ solveBtn.addEventListener("click", function() {
         return;
     }
 
-    const selectedAlgorithm = "bfs";
-
+const algorithmSelect = document.getElementById("algorithm");
+const selectedAlgorithm = algorithmSelect.value;
     const mazeRequest = {
         maze: mazeData,
         start: startPosition,
@@ -129,10 +129,149 @@ solveBtn.addEventListener("click", function() {
         algorithm: selectedAlgorithm
     };
 
-    console.log("Maze data ready:", mazeRequest);
+    console.log("Sending maze data:", mazeRequest);
+
+    try {
+
+        const response = await fetch("http://127.0.0.1:5000/solve", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(mazeRequest)
+        });
+
+        const result = await response.json();
+
+        console.log("Backend response:", result);
+        console.log("Explored cells:", result.explored);
+        console.log("Path length:", result.path_length);
+        document.getElementById("pathLength").textContent =
+        "Path Length: " + result.path_length;
+        console.log("Execution time:", result.execution_time);
+        document.getElementById("executionTime").textContent =
+        "Execution Time: " + (result.execution_time * 1000).toFixed(2) + " ms";
+        if (!response.ok) {
+            alert(result.error || "Something went wrong.");
+            return;
+        }
+
+        if (result.path === null) {
+            alert("No path found!");
+            return;
+        }
+// Clear previous path
+document.querySelectorAll(".cell").forEach(function(cell) {
+    cell.classList.remove("path");
+    cell.classList.remove("visited");
+});
+        // Show visited cells
+result.explored.forEach(function(position, index) {
+
+    const row = position[0];
+    const col = position[1];
+
+    const cell = document.querySelector(
+        `.cell[data-row="${row}"][data-col="${col}"]`
+    );
+
+    if (cell) {
+        setTimeout(function() {
+
+            if (
+                !(row === startPosition[0] && col === startPosition[1]) &&
+                !(row === endPosition[0] && col === endPosition[1])
+            ) {
+                cell.classList.add("visited");
+            }
+
+        }, index * 50);
+    }
 });
 
+        // Show the solution path
+        result.path.forEach(function(position, index) {
 
+            const row = position[0];
+            const col = position[1];
+
+            const cell = document.querySelector(
+                `.cell[data-row="${row}"][data-col="${col}"]`
+            );
+
+            if (cell) {
+                setTimeout(function() {
+
+                    // Don't remove start/end colors
+                    if (
+                        !(row === startPosition[0] && col === startPosition[1]) &&
+                        !(row === endPosition[0] && col === endPosition[1])
+                    ) {
+                        cell.classList.remove("visited");
+                        cell.classList.add("path");
+                    }
+
+                },  result.explored.length * 50 + index * 100);
+            }
+        });
+
+    } catch (error) {
+
+        console.error("Error connecting to backend:", error);
+
+        alert(
+            "Could not connect to the Flask backend.\n\n" +
+            "Make sure python backend/app.py is running."
+        );
+    }
+});
+compareBtn.addEventListener("click", async function() {
+
+    const algorithms = ["bfs", "dfs", "astar"];
+    const results = [];
+
+    for (const algorithm of algorithms) {
+
+        const mazeRequest = {
+            maze: mazeData,
+            start: startPosition,
+            end: endPosition,
+            algorithm: algorithm
+        };
+
+        const response = await fetch("http://127.0.0.1:5000/solve", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(mazeRequest)
+        });
+
+        const result = await response.json();
+
+        results.push({
+            algorithm: algorithm.toUpperCase(),
+            pathLength: result.path_length,
+            executionTime: result.execution_time
+        });
+    }
+
+    console.log("Algorithm comparison:", results);
+    const comparisonDiv = document.getElementById("comparison");
+
+comparisonDiv.innerHTML = "";
+
+results.forEach(function(result) {
+    comparisonDiv.innerHTML +=
+        "<p>" +
+        result.algorithm +
+        " — Path: " +
+        result.pathLength +
+        " | Time: " +
+        (result.executionTime * 1000).toFixed(2) +
+        " ms</p>";
+});
+});
 // Reset button
 
 const resetBtn = document.getElementById("resetBtn");

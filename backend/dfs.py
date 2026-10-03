@@ -1,6 +1,7 @@
 def dfs(maze, start, end):
     stack = [start]
     visited = {start}
+    explored = [start]
     parent = {start: None}
 
     directions = [
@@ -25,13 +26,14 @@ def dfs(maze, start, end):
             if (
                 0 <= new_row < len(maze)
                 and 0 <= new_col < len(maze[0])
-                and maze[new_row][new_col] != "#"
+                and maze[new_row][new_col] != 1
                 and (new_row, new_col) not in visited
             ):
                 new_cell = (new_row, new_col)
 
                 stack.append(new_cell)
                 visited.add(new_cell)
+                explored.append(new_cell)
                 parent[new_cell] = current
 
     if end not in parent:
@@ -46,4 +48,7 @@ def dfs(maze, start, end):
 
     path.reverse()
 
-    return path
+    return {
+    "path": path,
+    "explored": explored
+}

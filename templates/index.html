@@ -11,11 +11,22 @@
 
     <h1>Maze Solver</h1>
 
-    <button id="startBtn">Set Start</button>
-    <button id="endBtn">Set End</button>
-    <button id="solveBtn">Solve Maze</button>
-    <button id="resetBtn">Reset</button>
+   <label for="algorithm">Algorithm:</label>
 
+<select id="algorithm">
+    <option value="bfs">BFS</option>
+    <option value="dfs">DFS</option>
+    <option value="astar">A*</option>
+</select>
+
+<button id="startBtn">Set Start</button>
+<button id="endBtn">Set End</button>
+<button id="solveBtn">Solve Maze</button>
+<button id="resetBtn">Reset</button>
+<button id="compareBtn">Compare Algorithms</button>
+<p id="pathLength">Path Length: -</p>
+<p id="executionTime">Execution Time: -</p>
+<div id="comparison"></div>
     <div id="maze"></div>
 
     <script src="{{ url_for('static', filename='script.js') }}"></script>
