@@ -1,7 +1,7 @@
 const maze = document.getElementById("maze");
 
-const rows = 10;
-const cols = 10;
+let rows = 10;
+let cols = 10;
 
 let selectedMode = "wall";
 let startCell = null;
@@ -9,99 +9,109 @@ let endCell = null;
 
 let startPosition = null;
 let endPosition = null;
-
 let mazeData = [];
 
-// Create maze data
-for (let row = 0; row < rows; row++) {
-    mazeData[row] = [];
 
-    for (let col = 0; col < cols; col++) {
-        mazeData[row][col] = 0;
+function createMaze() {
+
+    maze.innerHTML = "";
+    mazeData = [];
+
+    for (let row = 0; row < rows; row++) {
+        mazeData[row] = [];
+
+        for (let col = 0; col < cols; col++) {
+            mazeData[row][col] = 0;
+        }
     }
-}
 
-// Create maze cells
-for (let row = 0; row < rows; row++) {
+    for (let row = 0; row < rows; row++) {
 
-    for (let col = 0; col < cols; col++) {
+        for (let col = 0; col < cols; col++) {
 
-        const cell = document.createElement("div");
+            const cell = document.createElement("div");
 
-        cell.classList.add("cell");
+            cell.classList.add("cell");
 
-        cell.dataset.row = row;
-        cell.dataset.col = col;
+            cell.dataset.row = row;
+            cell.dataset.col = col;
 
-        maze.appendChild(cell);
+            maze.appendChild(cell);
 
-        // Cell click
-        cell.addEventListener("click", function() {
+            cell.addEventListener("click", function() {
 
-            if (selectedMode === "start") {
+                if (selectedMode === "start") {
 
-                if (startCell !== null) {
-                    startCell.classList.remove("start");
-                }
+                    if (startCell !== null) {
+                        startCell.classList.remove("start");
+                    }
 
-                cell.classList.remove("wall");
-                cell.classList.remove("end");
-                cell.classList.add("start");
+                    cell.classList.remove("wall");
+                    cell.classList.remove("end");
+                    cell.classList.add("start");
 
-                startCell = cell;
+                    startCell = cell;
 
-                startPosition = [
-                    Number(cell.dataset.row),
-                    Number(cell.dataset.col)
-                ];
-                selectedMode = "wall";
+                    startPosition = [
+                        Number(cell.dataset.row),
+                        Number(cell.dataset.col)
+                    ];
+                    console.log("Start position:", startPosition);
+                    selectedMode = "wall";
 
-            } else if (selectedMode === "end") {
+                } else if (selectedMode === "end") {
 
-                if (endCell !== null) {
-                    endCell.classList.remove("end");
-                }
+                    if (endCell !== null) {
+                        endCell.classList.remove("end");
+                    }
 
-                cell.classList.remove("wall");
-                cell.classList.remove("start");
-                cell.classList.add("end");
+                    cell.classList.remove("wall");
+                    cell.classList.remove("start");
+                    cell.classList.add("end");
 
-                endCell = cell;
+                    endCell = cell;
 
-                endPosition = [
-                    Number(cell.dataset.row),
-                    Number(cell.dataset.col)
-                ];
-                selectedMode = "wall";
-            } else {
+                    endPosition = [
+                        Number(cell.dataset.row),
+                        Number(cell.dataset.col)
+                    ];
+                    console.log("End position:", endPosition);
 
-                cell.classList.toggle("wall");
+                    selectedMode = "wall";
 
-                const row = Number(cell.dataset.row);
-                const col = Number(cell.dataset.col);
-
-                if (cell.classList.contains("wall")) {
-                    mazeData[row][col] = 1;
                 } else {
-                    mazeData[row][col] = 0;
+
+                    cell.classList.toggle("wall");
+
+                    const row = Number(cell.dataset.row);
+                    const col = Number(cell.dataset.col);
+
+                    if (cell.classList.contains("wall")) {
+                        mazeData[row][col] = 1;
+                    } else {
+                        mazeData[row][col] = 0;
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 }
-
+createMaze();
 
 // Buttons
 
 const startBtn = document.getElementById("startBtn");
 const endBtn = document.getElementById("endBtn");
-
+const mazeSize = document.getElementById("mazeSize");
+const speedSelect = document.getElementById("speed");
 startBtn.addEventListener("click", function() {
     selectedMode = "start";
+    console.log("Start mode selected");
 });
 
 endBtn.addEventListener("click", function() {
     selectedMode = "end";
+    console.log("End mode selected");
 });
 
 // Solve button
@@ -187,7 +197,7 @@ result.explored.forEach(function(position, index) {
                 cell.classList.add("visited");
             }
 
-        }, index * 50);
+        }, index * Number(speedSelect.value));
     }
 });
 
@@ -213,7 +223,7 @@ result.explored.forEach(function(position, index) {
                         cell.classList.add("path");
                     }
 
-                },  result.explored.length * 50 + index * 100);
+                },  result.explored.length * Number(speedSelect.value) + index * Number(speedSelect.value) * 2);
             }
         });
 
@@ -228,6 +238,15 @@ result.explored.forEach(function(position, index) {
     }
 });
 compareBtn.addEventListener("click", async function() {
+        if (startPosition === null) {
+        alert("Please select a Start point.");
+        return;
+    }
+
+    if (endPosition === null) {
+        alert("Please select an End point.");
+        return;
+    }
 
     const algorithms = ["bfs", "dfs", "astar"];
     const results = [];
@@ -240,6 +259,7 @@ compareBtn.addEventListener("click", async function() {
             end: endPosition,
             algorithm: algorithm
         };
+        console.log("Compare request:", mazeRequest);
 
         const response = await fetch("http://127.0.0.1:5000/solve", {
             method: "POST",
@@ -261,23 +281,36 @@ compareBtn.addEventListener("click", async function() {
     console.log("Algorithm comparison:", results);
     const comparisonDiv = document.getElementById("comparison");
 
-comparisonDiv.innerHTML = "";
+comparisonDiv.innerHTML = `
+    <h3>Algorithm Comparison</h3>
+    <table>
+        <tr>
+            <th>Algorithm</th>
+            <th>Path Length</th>
+            <th>Execution Time</th>
+        </tr>
+    </table>
+`;
+
+const table = comparisonDiv.querySelector("table");
 
 results.forEach(function(result) {
-    comparisonDiv.innerHTML +=
-        "<p>" +
-        result.algorithm +
-        " — Path: " +
-        result.pathLength +
-        " | Time: " +
-        (result.executionTime * 1000).toFixed(2) +
-        " ms</p>";
+
+    table.innerHTML += `
+        <tr>
+            <td>${result.algorithm}</td>
+            <td>${result.pathLength}</td>
+            <td>${(result.executionTime * 1000).toFixed(2)} ms</td>
+        </tr>
+    `;
 });
+
 });
 // Reset button
 
 const resetBtn = document.getElementById("resetBtn");
-
+const generateBtn = document.getElementById("generateBtn");
+const clearPathBtn = document.getElementById("clearPathBtn");
 resetBtn.addEventListener("click", function() {
 
     const cells = document.querySelectorAll(".cell");

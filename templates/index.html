@@ -11,22 +11,52 @@
 
     <h1>Maze Solver</h1>
 
-   <label for="algorithm">Algorithm:</label>
+  <body>
 
-<select id="algorithm">
-    <option value="bfs">BFS</option>
-    <option value="dfs">DFS</option>
-    <option value="astar">A*</option>
+    <h1>Maze Solver</h1>
+
+    <label for="mazeSize">Maze Size:</label>
+
+    <select id="mazeSize">
+        <option value="10">10 × 10</option>
+        <option value="15">15 × 15</option>
+        <option value="20">20 × 20</option>
+    </select>
+
+    <label for="algorithm">Algorithm:</label>
+
+    <select id="algorithm">
+        <option value="bfs">BFS</option>
+        <option value="dfs">DFS</option>
+        <option value="astar">A*</option>
+    </select>
+    <label for="speed">Speed:</label>
+
+<select id="speed">
+    <option value="100">Slow</option>
+    <option value="50" selected>Normal</option>
+    <option value="10">Fast</option>
 </select>
 
 <button id="startBtn">Set Start</button>
 <button id="endBtn">Set End</button>
 <button id="solveBtn">Solve Maze</button>
 <button id="resetBtn">Reset</button>
+<button id="clearPathBtn">Clear Path</button>
+<button id="generateBtn">Generate Random Maze</button>
 <button id="compareBtn">Compare Algorithms</button>
 <p id="pathLength">Path Length: -</p>
 <p id="executionTime">Execution Time: -</p>
-<div id="comparison"></div>
+<div id="comparison">
+    <h3>Algorithm Comparison</h3>
+</div>
+<div id="legend">
+    <span><span class="legend-box start"></span> Start</span>
+    <span><span class="legend-box end"></span> End</span>
+    <span><span class="legend-box wall"></span> Wall</span>
+    <span><span class="legend-box path"></span> Path</span>
+    <span><span class="legend-box visited"></span> Visited</span>
+</div>
     <div id="maze"></div>
 
     <script src="{{ url_for('static', filename='script.js') }}"></script>
