@@ -82,8 +82,8 @@ DFS can find a path but does not guarantee the shortest path.
 
 A* combines the cost of reaching the current cell with an estimated cost to the destination.
 
-```text
-f(n) = g(n) + h(n)
+`f(n) = g(n) + h(n)`
+
 Where:
 
 - `g(n)` = cost from Start to current cell
@@ -91,3 +91,42 @@ Where:
 - `f(n)` = total estimated cost
 
 A* uses a priority queue to explore the most promising cells first.
+
+---
+
+## 📸 Screenshots
+
+### Main Interface
+
+![Main Interface](maze-main.png)
+
+### Maze Solution
+
+![Maze Solution](maze-solution.png)
+
+### Algorithm Comparison
+
+![Algorithm Comparison](maze-comparison.png)
+
+### Dark Mode
+
+![Dark Mode](maze-dark.png)
+
+---
+
+## 🏗️ Project Structure
+
+```text
+maze-solver/
+├── backend/
+│   ├── app.py
+│   ├── bfs.py
+│   ├── dfs.py
+│   ├── astar.py
+│   └── maze.py
+├── Static/
+│   ├── script.js
+│   └── style.css
+├── templates/
+│   └── index.html
+└── README.md
