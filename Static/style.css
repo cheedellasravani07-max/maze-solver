@@ -103,3 +103,55 @@ button {
 #comparison th {
     background-color: #eee;
 }
+body.dark-mode {
+    background-color: #222;
+    color: white;
+}
+
+body.dark-mode .cell {
+    background-color: #444;
+    border-color: #777;
+}
+
+body.dark-mode button,
+body.dark-mode select {
+    background-color: #333;
+    color: white;
+    border-color: #777;
+}
+
+body.dark-mode #comparison th {
+    background-color: #444;
+    color: white;
+}
+
+body.dark-mode #comparison td {
+    border-color: #777;
+}
+@media (max-width: 600px) {
+    body {
+        padding: 10px;
+    }
+
+    .cell {
+        width: 24px;
+        height: 24px;
+    }
+
+    #maze {
+        gap: 1px;
+        max-width: 100%;
+        overflow-x: auto;
+    }
+
+    button,
+    select {
+        font-size: 13px;
+        padding: 6px 8px;
+    }
+
+    #comparison table {
+        min-width: 300px;
+        font-size: 12px;
+    }
+}

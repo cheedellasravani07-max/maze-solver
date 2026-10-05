@@ -341,3 +341,33 @@ resetBtn.addEventListener("click", function() {
 
     selectedMode = "wall";
 });
+const darkModeBtn = document.getElementById("darkModeBtn");
+
+darkModeBtn.addEventListener("click", function() {
+    document.body.classList.toggle("dark-mode");
+
+    if (document.body.classList.contains("dark-mode")) {
+        darkModeBtn.textContent = "☀️ Light Mode";
+    } else {
+        darkModeBtn.textContent = "🌙 Dark Mode";
+    }
+});
+const downloadBtn = document.getElementById("downloadBtn");
+
+downloadBtn.addEventListener("click", function() {
+    const mazeDataText = JSON.stringify(mazeData);
+
+    const blob = new Blob([mazeDataText], {
+        type: "application/json"
+    });
+
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "maze.json";
+
+    link.click();
+
+    URL.revokeObjectURL(url);
+});
