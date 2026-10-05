@@ -146,6 +146,8 @@ const selectedAlgorithm = algorithmSelect.value;
         console.log("Backend response:", result);
         console.log("Explored cells:", result.explored);
         console.log("Path length:", result.path_length);
+        document.getElementById("cellsExplored").textContent =
+    "Cells Explored: " + result.explored.length;
         document.getElementById("pathLength").textContent =
         "Path Length: " + result.path_length;
         console.log("Execution time:", result.execution_time);
