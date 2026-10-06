@@ -142,33 +142,40 @@ const selectedAlgorithm = algorithmSelect.value;
     console.log("Sending maze data:", mazeRequest);
 
     try {
-
         const response = await fetch("/solve", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(mazeRequest)
-        });
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify(mazeRequest)
+});
 
-        const result = await response.json();
+const result = await response.json();
 
-        console.log("Backend response:", result);
-        console.log("Explored cells:", result.explored);
-        console.log("Path length:", result.path_length);
-        document.getElementById("cellsExplored").textContent =
+console.log("Backend response:", result);
+
+if (!response.ok) {
+    alert(result.error || "Something went wrong.");
+    return;
+}
+
+console.log("Explored cells:", result.explored);
+console.log("Path length:", result.path_length);
+
+document.getElementById("cellsExplored").textContent =
     "Cells Explored: " + result.explored.length;
-        document.getElementById("pathLength").textContent =
-        "Path Length: " + result.path_length;
-        console.log("Execution time:", result.execution_time);
-        document.getElementById("executionTime").textContent =
-        "Execution Time: " + (result.execution_time * 1000).toFixed(2) + " ms";
-        if (!response.ok) {
-            alert(result.error || "Something went wrong.");
-            return;
-        }
 
-        if (result.path === null) {
+document.getElementById("pathLength").textContent =
+    "Path Length: " + result.path_length;
+
+console.log("Execution time:", result.execution_time);
+
+document.getElementById("executionTime").textContent =
+    "Execution Time: " + (result.execution_time * 1000).toFixed(2) + " ms";
+
+if (result.path === null) {
+
+        
             alert("No path found!");
             return;
         }
