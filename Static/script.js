@@ -371,3 +371,62 @@ downloadBtn.addEventListener("click", function() {
 
     URL.revokeObjectURL(url);
 });
+// Maze size change
+mazeSize.addEventListener("change", function() {
+    rows = Number(mazeSize.value);
+    cols = Number(mazeSize.value);
+
+    startCell = null;
+    endCell = null;
+    startPosition = null;
+    endPosition = null;
+    selectedMode = "wall";
+
+    createMaze();
+});
+
+
+// Generate Random Maze
+generateBtn.addEventListener("click", function() {
+
+    startCell = null;
+    endCell = null;
+    startPosition = null;
+    endPosition = null;
+    selectedMode = "wall";
+
+    createMaze();
+
+    for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
+
+            const cell = document.querySelector(
+                `.cell[data-row="${row}"][data-col="${col}"]`
+            );
+
+            if (Math.random() < 0.25) {
+                cell.classList.add("wall");
+                mazeData[row][col] = 1;
+            }
+        }
+    }
+});
+
+
+// Clear Path
+clearPathBtn.addEventListener("click", function() {
+
+    document.querySelectorAll(".cell").forEach(function(cell) {
+        cell.classList.remove("visited");
+        cell.classList.remove("path");
+    });
+
+    document.getElementById("pathLength").textContent =
+        "Path Length: -";
+
+    document.getElementById("cellsExplored").textContent =
+        "Cells Explored: -";
+
+    document.getElementById("executionTime").textContent =
+        "Execution Time: -";
+});
