@@ -143,7 +143,7 @@ const selectedAlgorithm = algorithmSelect.value;
 
     try {
 
-        const response = await fetch("/solve", ...) {
+        const response = await fetch("/solve", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
